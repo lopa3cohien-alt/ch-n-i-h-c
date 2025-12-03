@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm ngành đúng – Chọn trường chuẩn – Tương lai sáng mở!</title>
+    <!-- Tối ưu SEO -->
+    <meta name="description" content="Website tư vấn chọn ngành, chọn trường đại học dựa trên sở thích, năng lực cá nhân và trắc nghiệm Holland RIASEC.">
+    <meta name="keywords" content="chọn ngành, chọn trường, hướng nghiệp, đại học, trắc nghiệm Holland, RIASEC">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#2563eb', // Blue-600
+                        'secondary-gray': '#f1f5f9', // Gray-100
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        .fade-slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .show-element {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tùy chỉnh thanh cuộn cho giao diện hiện đại */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <a href="#home" class="text-2xl font-bold text-primary-blue" onclick="navigate('home')">
+                HướngNghiệp<span class="text-gray-400">247</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="nav-item" onclick="navigate('home')">Trang chủ</a>
+                <a href="#test" class="nav-item" onclick="navigate('test')">Bài test</a>
+                <a href="#majors" class="nav-item" onclick="navigate('majors')">Ngành học</a>
+                <a href="#universities" class="nav-item" onclick="navigate('universities')">Trường học</a>
+                <a href="#blog" class="nav-item" onclick="navigate('blog')">Blog</a>
+                <a href="#contact" class="nav-item" onclick="navigate('contact')">Liên hệ</a>
+                <a href="#dashboard" class="nav-item font-semibold text-primary-blue hover:text-blue-700" onclick="navigate('dashboard')">Dashboard</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-500 hover:text-primary-blue focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="#home" class="mobile-nav-item" onclick="navigate('home'); toggleMobileMenu()">Trang chủ</a>
+                <a href="#test" class="mobile-nav-item" onclick="navigate('test'); toggleMobileMenu()">Bài test</a>
+                <a href="#majors" class="mobile-nav-item" onclick="navigate('majors'); toggleMobileMenu()">Ngành học</a>
+                <a href="#universities" class="mobile-nav-item" onclick="navigate('universities'); toggleMobileMenu()">Trường học</a>
+                <a href="#blog" class="mobile-nav-item" onclick="navigate('blog'); toggleMobileMenu()">Blog</a>
+                <a href="#contact" class="mobile-nav-item" onclick="navigate('contact'); toggleMobileMenu()">Liên hệ</a>
+                <a href="#dashboard" class="mobile-nav-item font-semibold text-primary-blue" onclick="navigate('dashboard'); toggleMobileMenu()">Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Message Box for Alerts (Replaces alert()) -->
+        <div id="message-box" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-[100]">
+            <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full transform transition-all fade-slide-up show-element">
+                <h3 class="text-xl font-bold mb-3 text-primary-blue" id="message-title">Thông báo</h3>
+                <p id="message-content" class="text-gray-700 mb-5">Nội dung thông báo.</p>
+                <button onclick="hideMessage()" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-blue-700 transition">Đóng</button>
+            </div>
+        </div>
+        
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="fixed inset-0 bg-white bg-opacity-75 hidden items-center justify-center z-50">
+            <div class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue"></div>
+                <p class="mt-3 text-primary-blue">Đang xử lý...</p>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div id="content-area">
+            <!-- Content will be rendered here by JS -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-primary-blue">HướngNghiệp247</h3>
+                    <p class="text-gray-400 text-sm">Tìm ngành đúng – Chọn trường chuẩn – Tương lai sáng mở!</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Thông tin</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition">Về chúng tôi</a></li>
+                        <li><a href="#terms" class="text-gray-400 hover:text-white transition">Điều khoản sử dụng</a></li>
+                        <li><a href="#privacy" class="text-gray-400 hover:text-white transition">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Tài nguyên</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#majors" class="text-gray-400 hover:text-white transition">Danh sách ngành</a></li>
+                        <li><a href="#universities" class="text-gray-400 hover:text-white transition">Danh sách trường</a></li>
+                        <li><a href="#blog" class="text-gray-400 hover:text-white transition">Blog hướng nghiệp</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Liên hệ</h4>
+                    <p class="text-gray-400 text-sm">Email: contact@huongnghiep247.vn</p>
+                    <p class="text-gray-400 text-sm">Hotline: 1900-6868</p>
+                    <p class="text-gray-400 text-sm">Địa chỉ: 123 Đường Tương Lai, Hà Nội, Việt Nam</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+                &copy; 2025 HướngNghiệp247. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- GLOBAL FIREBASE/APP CONFIGURATION ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth, userId = null;
+        let isAuthReady = false;
+
+        window.db = null; // Expose for global use
+        window.auth = null;
+        window.getUserId = () => userId;
+        window.isAuthReady = () => isAuthReady;
+        
+        const initFirebase = async () => {
+            try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.error("Firebase config is missing. Using mock functions for persistence.");
+                    return;
+                }
+                
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                window.db = db;
+                window.auth = auth;
+
+                // 1. Listen for auth state changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Authenticated user ID:", userId);
+                    } else {
+                        // For anonymous or unauthenticated state
+                        userId = crypto.randomUUID(); 
+                        console.log("No authenticated user. Using temporary ID:", userId);
+                    }
+                    isAuthReady = true;
+                    // Re-render content that depends on userId (e.g., Dashboard)
+                    if(window.globalState.currentPage === 'dashboard') {
+                        window.renderDashboard();
+                    }
+                });
+
+                // 2. Initial Sign-in
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+            } catch (error) {
+                console.error("Firebase initialization or sign-in failed:", error);
+                window.showMessage('Lỗi Hệ thống', 'Không thể kết nối đến hệ thống lưu trữ (Firebase). Tính năng Dashboard sẽ không hoạt động.', 'error');
+                isAuthReady = true; // Still allow the app to run without persistence
+            }
+        };
+
+        // --- FIRESTORE FUNCTIONS ---
+
+        const getPrivateDocRef = (docId) => {
+            if (!userId) {
+                console.error("User ID is not set. Cannot get document reference.");
+                return null;
+            }
+            // Path: /artifacts/{appId}/users/{userId}/results/{docId}
+            return doc(db, 'artifacts', appId, 'users', userId, 'results', docId);
+        };
+        
+        window.saveTestResult = async (result, comparisonData = []) => {
+            if (!isAuthReady() || !db) return window.showMessage('Lỗi', 'Hệ thống chưa sẵn sàng lưu trữ. Vui lòng thử lại.', 'error');
+            const dataToSave = {
+                ...result,
+                comparisonData: comparisonData,
+                timestamp: new Date().toISOString()
+            };
+            try {
+                // Use a fixed ID 'latest' for the single latest result
+                const docRef = getPrivateDocRef('latest');
+                await setDoc(docRef, dataToSave, { merge: true });
+                console.log("Test result saved successfully!");
+                return true;
+            } catch (e) {
+                console.error("Error saving document: ", e);
+                window.showMessage('Lỗi Lưu trữ', 'Không thể lưu kết quả bài test vào Dashboard.', 'error');
+                return false;
+            }
+        };
+
+        window.loadTestResult = async () => {
+            if (!isAuthReady() || !db) return null;
+            try {
+                const docRef = getPrivateDocRef('latest');
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    return docSnap.data();
+                } else {
+                    console.log("No saved test results found.");
+                    return null;
+                }
+            } catch (e) {
+                console.error("Error loading document: ", e);
+                window.showMessage('Lỗi Tải dữ liệu', 'Không thể tải kết quả bài test từ Dashboard.', 'error');
+                return null;
+            }
+        };
+
+        // Initialize Firebase on window load
+        window.addEventListener('load', initFirebase);
+    </script>
+
+    <!-- Main Application Logic (Vanilla JS) -->
+    <script>
+        // --- UTILITY FUNCTIONS ---
+        const showMessage = (title, content, type = 'info') => {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = content;
+            const box = document.getElementById('message-box');
+            box.classList.remove('hidden');
+            box.classList.add('flex');
+            // Add a small animation for flair
+            const contentDiv = box.querySelector('div');
+            contentDiv.classList.remove('show-element');
+            setTimeout(() => contentDiv.classList.add('show-element'), 10);
+        };
+        const hideMessage = () => {
+            const box = document.getElementById('message-box');
+            box.classList.remove('flex');
+            box.classList.add('hidden');
+        };
+        window.showMessage = showMessage;
+        window.hideMessage = hideMessage;
+
+        const showLoading = () => document.getElementById('loading-indicator').classList.remove('hidden');
+        const hideLoading = () => document.getElementById('loading-indicator').classList.add('hidden');
+
+        // Simple Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const toggleMobileMenu = () => mobileMenu.classList.toggle('hidden');
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        window.toggleMobileMenu = toggleMobileMenu;
+
+
+        // --- MOCK DATA ---
+        // (Simplified for brevity, full logic in the plan file)
+        const MOCK_DATA = {
+            // R: Realistic, I: Investigative, A: Artistic, S: Social, E: Enterprising, C: Conventional
+            riasecQuestions: [
+                { id: 'q1', type: 'R', text: 'Tôi thích làm việc với máy móc, công cụ và sửa chữa đồ vật.', score: 0 },
+                { id: 'q2', type: 'I', text: 'Tôi thích nghiên cứu khoa học, khám phá và giải quyết các vấn đề phức tạp.', score: 0 },
+                { id: 'q3', type: 'A', text: 'Tôi thích vẽ, viết, thiết kế, hoặc biểu diễn nghệ thuật.', score: 0 },
+                { id: 'q4', type: 'S', text: 'Tôi thích giúp đỡ, giảng dạy, hoặc chăm sóc người khác.', score: 0 },
+                { id: 'q5', type: 'E', text: 'Tôi thích lãnh đạo, kinh doanh, thuyết phục người khác.', score: 0 },
+                { id: 'q6', type: 'C', text: 'Tôi thích làm việc có tổ chức, sắp xếp, ghi chép số liệu.', score: 0 },
+                { id: 'q7', type: 'R', text: 'Tôi thích công việc ngoài trời hoặc tạo ra sản phẩm hữu hình.', score: 0 },
+                { id: 'q8', type: 'I', text: 'Tôi thích phân tích dữ liệu, làm thí nghiệm.', score: 0 },
+                { id: 'q9', type: 'A', text: 'Tôi thích thể hiện ý tưởng độc đáo của mình.', score: 0 },
+                { id: 'q10', type: 'S', text: 'Tôi thích tham gia các hoạt động cộng đồng, làm tình nguyện.', score: 0 },
+                { id: 'q11', type: 'E', text: 'Tôi thích quản lý dự án, đưa ra các quyết định lớn.', score: 0 },
+                { id: 'q12', type: 'C', text: 'Tôi thích sự chính xác, quy tắc và chi tiết.', score: 0 },
+                // Thêm 13 câu hỏi về Kỹ năng & Mục tiêu cho đủ 25
+            ],
+            skillQuestions: [
+                { id: 's1', subject: 'Toán', text: 'Điểm số môn Toán của bạn (hoặc năng lực tự đánh giá) ở mức nào?', score: 0 },
+                { id: 's2', subject: 'Văn', text: 'Khả năng viết, lập luận và cảm thụ văn học của bạn?', score: 0 },
+                { id: 's3', subject: 'Tiếng Anh', text: 'Khả năng giao tiếp và sử dụng Tiếng Anh của bạn?', score: 0 },
+                { id: 's4', subject: 'Tư duy/Sáng tạo', text: 'Bạn tự đánh giá khả năng tư duy logic và sáng tạo của mình?', score: 0 },
+                //... Thêm 4 câu nữa (Lý, Hóa, Sinh, Sử/Địa)
+            ],
+            goalQuestions: [
+                { id: 'g1', text: 'Mức lương bạn mong muốn sau 5 năm ra trường là:', score: 0 },
+                { id: 'g2', text: 'Môi trường làm việc bạn thích là:', score: 0 },
+                { id: 'g3', text: 'Tính ổn định của công việc đối với bạn quan trọng ở mức:', score: 0 },
+            ],
+            majors: [
+                { 
+                    id: 'it', name: 'Công nghệ Thông tin (IT)', group: 'Tự nhiên',
+                    riasecReq: { I: 5, C: 3, R: 2 }, 
+                    subjects: ['Toán', 'Lý', 'Tin Học'], salary: 'Rất cao', stability: 'Cao', environment: 'Văn phòng/Độc lập',
+                    description: 'Ngành học về phát triển phần mềm, hệ thống mạng, an ninh mạng và trí tuệ nhân tạo.',
+                    jobs: ['Lập trình viên', 'Kỹ sư AI', 'Chuyên gia bảo mật'],
+                    schools: { North: ['Bách Khoa', 'Công nghệ - ĐHQG'], Central: ['Đà Nẵng'], South: ['HCMUT', 'KHTN'] }
+                },
+                { 
+                    id: 'eco', name: 'Kinh tế/Quản trị Kinh doanh', group: 'Xã hội',
+                    riasecReq: { E: 5, C: 3, S: 2 }, 
+                    subjects: ['Toán', 'Tiếng Anh', 'Tư duy'], salary: 'Cao', stability: 'Trung bình', environment: 'Năng động/Giao tiếp',
+                    description: 'Nghiên cứu cách tổ chức, vận hành và quản lý một doanh nghiệp.',
+                    jobs: ['Quản lý dự án', 'Chuyên viên Marketing', 'Phân tích tài chính'],
+                    schools: { North: ['Kinh tế QG', 'Ngoại thương'], Central: ['Kinh tế - Đà Nẵng'], South: ['Kinh tế HCM', 'UEH'] }
+                },
+                { 
+                    id: 'medi', name: 'Y Đa khoa', group: 'Tự nhiên',
+                    riasecReq: { I: 5, S: 4, R: 1 }, 
+                    subjects: ['Sinh', 'Hóa', 'Lý'], salary: 'Cao', stability: 'Rất cao', environment: 'Y tế/Cộng đồng',
+                    description: 'Đào tạo bác sĩ chẩn đoán, điều trị và phòng ngừa bệnh tật.',
+                    jobs: ['Bác sĩ điều trị', 'Bác sĩ nghiên cứu'],
+                    schools: { North: ['Y Hà Nội'], Central: ['Y Dược Huế'], South: ['Y Dược HCM'] }
+                },
+                { 
+                    id: 'art', name: 'Thiết kế Đồ họa', group: 'Xã hội',
+                    riasecReq: { A: 5, I: 2, C: 1 }, 
+                    subjects: ['Sáng tạo', 'Văn', 'Công Nghệ'], salary: 'Trung bình', stability: 'Trung bình', environment: 'Sáng tạo/Độc lập',
+                    description: 'Sử dụng công cụ kỹ thuật số để tạo ra các sản phẩm hình ảnh, thương hiệu.',
+                    jobs: ['Designer', 'Art Director', 'Chuyên viên sáng tạo'],
+                    schools: { North: ['Mỹ thuật CN', 'Kiến trúc'], Central: ['Đà Nẵng'], South: ['Kiến trúc HCM'] }
+                },
+                { 
+                    id: 'law', name: 'Luật', group: 'Xã hội',
+                    riasecReq: { C: 4, S: 3, E: 2 }, 
+                    subjects: ['Văn', 'Sử', 'Giáo Dục Kinh Tế Pháp Luật'], salary: 'Trung bình', stability: 'Cao', environment: 'Văn phòng/Phân tích',
+                    description: 'Nghiên cứu và áp dụng các quy tắc, hệ thống pháp luật của nhà nước.',
+                    jobs: ['Luật sư', 'Công chứng viên', 'Chuyên viên pháp chế'],
+                    schools: { North: ['Luật HN', 'Luật - ĐHQG'], Central: ['Luật Huế'], South: ['Luật HCM'] }
+                },
+            ],
+            universities: [
+                { id: 'bkhn', name: 'Đại học Bách Khoa Hà Nội', region: 'North', logo: 'https://placehold.co/50x50/2563eb/ffffff?text=BKHN',
+                    map: 'https://maps.app.goo.gl/K6s3YgMhW34Q9m4q6',
+                    cutoff: { 2024: 26.5, 2023: 27.0, 2022: 26.8 }, tuition: '25-30 triệu/năm',
+                    strongMajors: ['Công nghệ Thông tin', 'Kỹ thuật Điện tử', 'Cơ khí'],
+                    reviews: 'Cơ sở vật chất tốt, môi trường học tập áp lực cao.', suitability: 0.0
+                },
+                { id: 'ftu', name: 'Đại học Ngoại Thương', region: 'North', logo: 'https://placehold.co/50x50/10b981/ffffff?text=FTU',
+                    map: 'https://maps.app.goo.gl/E4L9dK1L32gB2gM7A',
+                    cutoff: { 2024: 27.5, 2023: 27.8, 2022: 27.2 }, tuition: '20-25 triệu/năm',
+                    strongMajors: ['Kinh tế Quốc tế', 'Quản trị Kinh doanh', 'Logistics'],
+                    reviews: 'Sinh viên năng động, cơ hội việc làm cao.', suitability: 0.0
+                },
+                { id: 'ydhcm', name: 'Đại học Y Dược TP.HCM', region: 'South', logo: 'https://placehold.co/50x50/ef4444/ffffff?text=YDHCM',
+                    map: 'https://maps.app.goo.gl/9Zc7V3jF4mJ6vK9W8',
+                    cutoff: { 2024: 28.5, 2023: 28.0, 2022: 28.2 }, tuition: '15-20 triệu/năm',
+                    strongMajors: ['Y Đa khoa', 'Răng Hàm Mặt', 'Dược học'],
+                    reviews: 'Chất lượng đào tạo hàng đầu miền Nam, rất uy tín.', suitability: 0.0
+                },
+                // Thêm 2 trường miền Trung/Nam/Bắc khác
+            ]
+        };
+        
+        // --- GLOBAL STATE ---
+        window.globalState = {
+            currentPage: 'home',
+            currentTestStep: 1,
+            testResponses: {},
+            testResult: null,
+            comparisonMajors: [],
+            majorsFilter: { group: 'all', fit: 0 }
+        };
+
+        // --- CORE LOGIC: SUITABILITY CALCULATION (Implemented in JS for responsiveness) ---
+
+        /**
+         * Calculates the suitability score (0-100%) for a major based on user test results.
+         * @param {Object} major - The major object from MOCK_DATA.majors
+         * @param {Object} userResult - The processed user test result (RIASEC, SkillScores, GoalScores).
+         * @returns {number} The suitability percentage.
+         */
+        const calculateSuitability = (major, userResult) => {
+            const { riasecScores, skillScores, goalScores } = userResult;
+            const riasecReq = major.riasecReq;
+            
+            // 1. RIASEC Fit (Weight 50%)
+            let riasecDiff = 0;
+            const riasecKeys = ['R', 'I', 'A', 'S', 'E', 'C'];
+            let maxReq = 0;
+
+            for (const key of riasecKeys) {
+                const req = riasecReq[key] || 0;
+                maxReq += req;
+                // Difference is absolute value. We want a low difference.
+                riasecDiff += Math.abs((riasecScores[key] || 0) - req); 
+            }
+            // Normalize RIASEC diff (max theoretical diff is 5*6=30). Normalize to a 0-1 score.
+            const maxPossibleDiff = 30; // 6 groups * 5 (max score for each)
+            const riasecFitScore = 1 - (riasecDiff / maxPossibleDiff); // 0 (worst) to 1 (best)
+
+            // 2. Skill Fit (Weight 30%)
+            let skillMatchCount = 0;
+            major.subjects.forEach(subject => {
+                const userSkillRating = skillScores[subject] || 1; // Default to 1 if not rated
+                // Assume strong subjects need at least a 3/5 rating to count as a good match
+                if (userSkillRating >= 4) {
+                    skillMatchCount += 1;
+                } else if (userSkillRating >= 3) {
+                    skillMatchCount += 0.5;
+                }
+            });
+            const skillFitScore = skillMatchCount / major.subjects.length; // 0 to 1
+
+            // 3. Goal Fit (Weight 20%) - Simplified for demo
+            let goalMatch = 0;
+            // High salary goal (user.g1='Rất cao') matches major.salary='Rất cao'
+            if ((userResult.goalG1 === 'Rất cao' && major.salary === 'Rất cao') ||
+                (userResult.goalG2 === 'Năng động/Giao tiếp' && major.environment === 'Năng động/Giao tiếp') ||
+                (userResult.goalG3 === 'Rất cao' && major.stability === 'Rất cao')) {
+                goalMatch = 1;
+            } else if (major.salary === 'Trung bình' && userResult.goalG1 !== 'Rất cao') {
+                goalMatch = 0.5;
+            } else {
+                goalMatch = 0.2; // Baseline
+            }
+
+            // Weighted Total Score (0 to 1)
+            const totalScore = (riasecFitScore * 0.5) + (skillFitScore * 0.3) + (goalMatch * 0.2);
+
+            // Convert to Percentage
+            return Math.round(totalScore * 100);
+        };
+        window.calculateSuitability = calculateSuitability;
+
+        /**
+         * Converts percentage score to suitability level.
+         * @param {number} score - Percentage score (0-100).
+         * @returns {Object} { level: string, color: string }
+         */
+        const getSuitabilityLevel = (score) => {
+            if (score >= 80) return { level: 'Excellent', color: 'text-green-600', badge: 'bg-green-100 text-green-700' };
+            if (score >= 60) return { level: 'Good', color: 'text-blue-600', badge: 'bg-blue-100 text-blue-700' };
+            if (score >= 40) return { level: 'Average', color: 'text-yellow-600', badge: 'bg-yellow-100 text-yellow-700' };
+            return { level: 'Low', color: 'text-red-600', badge: 'bg-red-100 text-red-700' };
+        };
+        window.getSuitabilityLevel = getSuitabilityLevel;
+
+        /**
+         * Process the raw test responses into a structured result object.
+         * @param {Object} responses - Key-value pairs of qID: score.
+         * @returns {Object} Processed result.
+         */
+        const processTestResults = (responses) => {
+            let riasecScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+            let skillScores = {};
+            let goalResponses = {};
+
+            Object.entries(responses).forEach(([key, value]) => {
+                const score = parseInt(value);
+                
+                // RIASEC (q1-q12)
+                if (key.startsWith('q')) {
+                    const q = MOCK_DATA.riasecQuestions.find(q => q.id === key);
+                    if (q) {
+                        riasecScores[q.type] += score;
+                    }
+                }
+                // Skills (s1-s8)
+                else if (key.startsWith('s')) {
+                    const s = MOCK_DATA.skillQuestions.find(s => s.id === key);
+                    if (s) {
+                        skillScores[s.subject] = score;
+                    }
+                }
+                // Goals (g1-g3) - assuming g1: salary, g2: environment, g3: stability
+                else if (key.startsWith('g')) {
+                    goalResponses[key] = value;
+                }
+            });
+
+            const topMajors = MOCK_DATA.majors
+                .map(major => ({
+                    ...major,
+                    suitabilityScore: calculateSuitability(major, { riasecScores, skillScores, goalG1: goalResponses.g1, goalG2: goalResponses.g2, goalG3: goalResponses.g3 })
+                }))
+                .sort((a, b) => b.suitabilityScore - a.suitabilityScore)
+                .slice(0, 5);
+            
+            // Calculate school suitability (simple: based on major suitability)
+            const topMajorNames = topMajors.map(m => m.name);
+            MOCK_DATA.universities.forEach(uni => {
+                let totalFit = 0;
+                let matchCount = 0;
+                uni.strongMajors.forEach(sm => {
+                    const majorFit = topMajors.find(m => m.name === sm);
+                    if (majorFit) {
+                        totalFit += majorFit.suitabilityScore;
+                        matchCount += 1;
+                    }
+                });
+                uni.suitability = matchCount > 0 ? Math.round(totalFit / matchCount) : 10; // 10% baseline if no major match
+            });
+
+            return { riasecScores, skillScores, goalResponses, topMajors, recommendedSchools: MOCK_DATA.universities.filter(u => u.suitability > 50).sort((a, b) => b.suitability - a.suitability) };
+        };
+        window.processTestResults = processTestResults;
+
+        // --- ROUTING & RENDERING ---
+
+        const renderContent = (contentHtml) => {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = contentHtml;
+            // Apply fade-slide-up effect to new content
+            const elements = contentArea.querySelectorAll('.fade-slide-up');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('show-element');
+                }, index * 100); // Stagger the animation
+            });
+        };
+
+        const navigate = (page) => {
+            window.globalState.currentPage = page;
+            switch (page) {
+                case 'home':
+                    renderHome();
+                    break;
+                case 'test':
+                    renderTest();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+                case 'majors':
+                    renderMajors();
+                    break;
+                case 'universities':
+                    renderUniversities();
+                    break;
+                case 'blog':
+                    renderBlog();
+                    break;
+                case 'contact':
+                    renderContact();
+                    break;
+                case 'dashboard':
+                    renderDashboard();
+                    break;
+                default:
+                    renderHome();
+            }
+            // Update URL hash for simple history/link sharing
+            window.location.hash = page;
+            window.scrollTo(0, 0); // Scroll to top
+        };
+        window.navigate = navigate;
+
+        // --- PAGE RENDERING FUNCTIONS ---
+
+        const renderHome = () => {
+            const html = `
+                <!-- Banner Section -->
+                <section class="mb-16 bg-secondary-gray p-10 rounded-2xl shadow-xl fade-slide-up">
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-1/2">
+                            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                                Tìm ngành <span class="text-primary-blue">đúng</span> – Chọn trường <span class="text-primary-blue">chuẩn</span>
+                            </h1>
+                            <p class="text-xl text-gray-600 mb-8">
+                                Tương lai sáng mở! Khám phá bản thân và tìm con đường học vấn phù hợp nhất với bạn.
+                            </p>
+                            <button onclick="navigate('test')" class="bg-primary-blue text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-blue-700 transition transform hover:scale-105">
+                                Làm bài test ngay!
+                            </button>
+                        </div>
+                        <div class="md:w-1/2 mt-8 md:mt-0 flex justify-center">
+                            
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Lợi ích Section -->
+                <section class="mb-16">
+                    <h2 class="text-3xl font-bold text-center mb-10 fade-slide-up">Tại sao chọn HướngNghiệp247?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary-blue fade-slide-up">
+                            <svg class="w-10 h-10 text-primary-blue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <h3 class="text-xl font-semibold mb-2">Hiểu bản thân sâu sắc</h3>
+                            <p class="text-gray-600">Bài test Holland, tính cách và năng lực giúp bạn khám phá sở thích, điểm mạnh cốt lõi.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary-blue fade-slide-up" style="transition-delay: 0.1s;">
+                            <svg class="w-10 h-10 text-primary-blue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                            <h3 class="text-xl font-semibold mb-2">Chọn ngành đúng đắn</h3>
+                            <p class="text-gray-600">Gợi ý top 5 ngành phù hợp nhất với điểm số và mục tiêu tương lai của bạn.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary-blue fade-slide-up" style="transition-delay: 0.2s;">
+                            <svg class="w-10 h-10 text-primary-blue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            <h3 class="text-xl font-semibold mb-2">Tìm trường phù hợp</h3>
+                            <p class="text-gray-600">Đánh giá các trường đào tạo mạnh, điểm chuẩn, học phí chi tiết theo từng ngành.</p>
+                        </div>
+                    </div>
+                </section>
+            `;
+            renderContent(html);
+        };
+
+        const renderTest = () => {
+            const currentStep = window.globalState.currentTestStep;
+            const allQuestions = [...MOCK_DATA.riasecQuestions, ...MOCK_DATA.skillQuestions, ...MOCK_DATA.goalQuestions];
+            const qCount = allQuestions.length;
+            const progress = Math.round(((currentStep - 1) / qCount) * 100);
+
+            if (currentStep > qCount) {
+                // All questions answered, proceed to results calculation
+                calculateAndRenderResults();
+                return;
+            }
+
+            const currentQ = allQuestions[currentStep - 1];
+            let questionHtml = '';
+
+            if (currentQ.type) { // RIASEC Questions (q1-q12) - Likert Scale
+                questionHtml = `
+                    <p class="text-lg mb-6">${currentQ.text}</p>
+                    <div class="flex flex-col space-y-3">
+                        ${['Rất không thích', 'Không thích', 'Bình thường', 'Thích', 'Rất thích'].map((label, index) => `
+                            <label class="flex items-center p-3 border rounded-lg hover:bg-blue-50 transition cursor-pointer">
+                                <input type="radio" name="${currentQ.id}" value="${index + 1}" required 
+                                    class="w-4 h-4 text-primary-blue focus:ring-primary-blue" 
+                                    ${window.globalState.testResponses[currentQ.id] == (index + 1) ? 'checked' : ''}>
+                                <span class="ml-3 text-gray-700">${label}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (currentQ.subject) { // Skill Questions (s1-s8) - Self-Assessment 1-5
+                questionHtml = `
+                    <p class="text-lg mb-6 font-semibold text-primary-blue">Đánh giá năng lực: ${currentQ.subject}</p>
+                    <p class="text-gray-700 mb-6">${currentQ.text}</p>
+                    <div class="flex justify-between items-center text-center">
+                        ${[1, 2, 3, 4, 5].map(score => `
+                            <label class="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-blue-50 transition">
+                                <input type="radio" name="${currentQ.id}" value="${score}" required 
+                                    class="w-4 h-4 text-primary-blue focus:ring-primary-blue"
+                                    ${window.globalState.testResponses[currentQ.id] == score ? 'checked' : ''}>
+                                <span class="mt-2 text-sm">${score} (Thấp - Cao)</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+            } else { // Goal Questions (g1-g3) - Specific Choices
+                let options = [];
+                if (currentQ.id === 'g1') options = ['Thấp (<10tr/tháng)', 'Trung bình (10-20tr/tháng)', 'Cao (20-40tr/tháng)', 'Rất cao (>40tr/tháng)'];
+                if (currentQ.id === 'g2') options = ['Ổn định/Văn phòng', 'Năng động/Giao tiếp', 'Nghiên cứu/Độc lập', 'Sáng tạo/Tự do'];
+                if (currentQ.id === 'g3') options = ['Thấp', 'Trung bình', 'Cao', 'Rất cao'];
+
+                questionHtml = `
+                    <p class="text-lg mb-6 font-semibold text-primary-blue">Mục tiêu tương lai</p>
+                    <p class="text-gray-700 mb-6">${currentQ.text}</p>
+                    <div class="flex flex-col space-y-3">
+                        ${options.map(option => `
+                            <label class="flex items-center p-3 border rounded-lg hover:bg-blue-50 transition cursor-pointer">
+                                <input type="radio" name="${currentQ.id}" value="${option}" required 
+                                    class="w-4 h-4 text-primary-blue focus:ring-primary-blue"
+                                    ${window.globalState.testResponses[currentQ.id] == option ? 'checked' : ''}>
+                                <span class="ml-3 text-gray-700">${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            const html = `
+                <section class="max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center fade-slide-up">Bài Test Hướng nghiệp Toàn diện</h2>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mb-8 fade-slide-up" style="transition-delay: 0.1s;">
+                        <p class="text-sm font-medium text-gray-600 mb-2">Tiến độ: Câu ${currentStep} / ${qCount} (${progress}%)</p>
+                        <div class="w-full bg-secondary-gray rounded-full h-2.5">
+                            <div class="bg-primary-blue h-2.5 rounded-full transition-all duration-500" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card -->
+                    <form id="test-form" onsubmit="handleTestStep(event)">
+                        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl border border-gray-200 fade-slide-up" style="transition-delay: 0.2s;">
+                            <h3 class="text-2xl font-semibold mb-6">Câu hỏi ${currentStep}</h3>
+                            ${questionHtml}
+                            <div class="flex justify-between mt-8">
+                                <button type="button" onclick="prevTestStep()" 
+                                    class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition disabled:opacity-50"
+                                    ${currentStep === 1 ? 'disabled' : ''}>
+                                    &larr; Quay lại
+                                </button>
+                                <button type="submit" class="bg-primary-blue text-white px-8 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                                    Tiếp theo &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            `;
+            renderContent(html);
+        };
+        window.renderTest = renderTest;
+
+        const handleTestStep = (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const currentQ = [...MOCK_DATA.riasecQuestions, ...MOCK_DATA.skillQuestions, ...MOCK_DATA.goalQuestions][window.globalState.currentTestStep - 1];
+            const response = form[currentQ.id].value;
+
+            if (!response) {
+                showMessage('Cảnh báo', 'Vui lòng chọn một đáp án trước khi tiếp tục.');
+                return;
+            }
+
+            window.globalState.testResponses[currentQ.id] = response;
+            window.globalState.currentTestStep++;
+            renderTest();
+        };
+
+        const prevTestStep = () => {
+            if (window.globalState.currentTestStep > 1) {
+                window.globalState.currentTestStep--;
+                renderTest();
+            }
+        };
+
+        const calculateAndRenderResults = async () => {
+            showLoading();
+            await new Promise(resolve => setTimeout(resolve, 500)); // Simulate processing time
+
+            const result = processTestResults(window.globalState.testResponses);
+            window.globalState.testResult = result;
+
+            // Save to Dashboard
+            const isSaved = await saveTestResult(result);
+            if(isSaved) {
+                showMessage('Hoàn thành', 'Bài test đã hoàn thành và kết quả đã được lưu vào Dashboard cá nhân của bạn!', 'success');
+            } else {
+                 showMessage('Hoàn thành', 'Bài test đã hoàn thành! Vui lòng vào Dashboard để xem lại.', 'info');
+            }
+
+            hideLoading();
+            renderResults();
+        };
+
+        const renderResults = () => {
+            if (!window.globalState.testResult) {
+                return renderContent('<p class="text-center mt-10 text-xl text-red-500">Lỗi: Không tìm thấy kết quả bài test. Vui lòng làm lại.</p>');
+            }
+
+            const result = window.globalState.testResult;
+            const topMajor = result.topMajors[0];
+            const overallFit = getSuitabilityLevel(topMajor.suitabilityScore);
+
+            const riasecHtml = Object.entries(result.riasecScores).map(([key, score]) => `
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">${key} (${getRIASECTitle(key)}):</span>
+                    <span class="text-primary-blue font-bold">${score}</span>
+                </div>
+                <div class="w-full bg-secondary-gray rounded-full h-2 mb-3">
+                    <div class="bg-primary-blue h-2 rounded-full" style="width: ${Math.min(score / 5 * 100, 100)}%;"></div>
+                </div>
+            `).join('');
+
+            const majorsHtml = result.topMajors.map(major => {
+                const fit = getSuitabilityLevel(major.suitabilityScore);
+                return `
+                    <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-3 border border-gray-200 fade-slide-up" style="transition-delay: 0.1s;">
+                        <div>
+                            <p class="font-semibold text-gray-800">${major.name}</p>
+                            <span class="text-sm text-gray-500">Môn thế mạnh: ${major.subjects.join(', ')}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl font-bold ${fit.color}">${major.suitabilityScore}%</span>
+                            <span class="text-xs font-medium px-2 py-0.5 rounded-full ${fit.badge}">${fit.level}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const schoolsHtml = result.recommendedSchools.slice(0, 3).map(uni => {
+                const fit = getSuitabilityLevel(uni.suitability);
+                return `
+                    <div class="flex items-center bg-white p-4 rounded-lg shadow-sm mb-3 border border-gray-200 fade-slide-up" style="transition-delay: 0.2s;">
+                        <img src="${uni.logo}" alt="${uni.name} logo" class="w-10 h-10 rounded-full mr-4 object-cover">
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-800">${uni.name} (${uni.region})</p>
+                            <span class="text-sm text-gray-500">Phù hợp: ${uni.suitability}%</span>
+                        </div>
+                        <span class="text-xs font-medium px-2 py-0.5 rounded-full ${fit.badge}">${fit.level}</span>
+                    </div>
+                `;
+            }).join('') || '<p class="text-center text-gray-500 italic">Không có trường nào có mức độ phù hợp cao trong dữ liệu mẫu.</p>';
+
+
+            const html = `
+                <section class="mb-16">
+                    <h2 class="text-4xl font-extrabold text-primary-blue mb-2 text-center fade-slide-up">KẾT QUẢ BÀI TEST CỦA BẠN</h2>
+                    <p class="text-xl text-gray-600 mb-10 text-center fade-slide-up">Phân tích toàn diện dựa trên sở thích, năng lực và mục tiêu.</p>
+
+                    <!-- Summary Card -->
+                    <div class="bg-primary-blue text-white p-8 rounded-2xl shadow-2xl mb-12 flex justify-between items-center fade-slide-up" style="transition-delay: 0.2s;">
+                        <div>
+                            <p class="text-2xl font-semibold mb-1">Ngành phù hợp nhất:</p>
+                            <h3 class="text-4xl font-bold">${topMajor.name}</h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-semibold">Mức độ phù hợp:</p>
+                            <span class="text-5xl font-extrabold">${topMajor.suitabilityScore}%</span>
+                            <span class="block text-lg font-bold">${overallFit.level}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Cột 1: RIASEC Scores -->
+                        <div class="lg:col-span-1 bg-secondary-gray p-6 rounded-xl shadow-lg fade-slide-up" style="transition-delay: 0.3s;">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Điểm RIASEC (Holland)</h3>
+                            <p class="text-sm text-gray-600 mb-4">6 nhóm sở thích nghề nghiệp của bạn:</p>
+                            ${riasecHtml}
+                            <!-- Placeholder for Radar Chart -->
+                            <div class="mt-6 p-4 bg-white rounded-lg border">
+                                
+                            </div>
+                        </div>
+
+                        <!-- Cột 2: Top 5 Ngành Phù hợp -->
+                        <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-gray-200 fade-slide-up" style="transition-delay: 0.4s;">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Top 5 Ngành Phù hợp Nhất</h3>
+                            ${majorsHtml}
+                            <!-- Placeholder for Bar Chart -->
+                            <div class="mt-6 p-4 bg-secondary-gray rounded-lg border">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Schools -->
+                    <div class="mt-12 p-6 bg-secondary-gray rounded-xl shadow-lg fade-slide-up" style="transition-delay: 0.5s;">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Top Trường Đề xuất (Theo Ngành Phù hợp)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${schoolsHtml}
+                        </div>
+                        <button onclick="navigate('universities')" class="mt-6 w-full text-center text-primary-blue font-semibold hover:text-blue-700 transition">
+                            Xem tất cả trường Đại học &rarr;
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-12 fade-slide-up" style="transition-delay: 0.6s;">
+                        <button onclick="navigate('dashboard')" class="bg-gray-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-gray-800 transition transform hover:scale-105">
+                            Đi đến Dashboard cá nhân
+                        </button>
+                    </div>
+                </section>
+            `;
+            renderContent(html);
+        };
+
+        const getRIASECTitle = (key) => {
+            const titles = { R: 'Thực tế', I: 'Nghiên cứu', A: 'Nghệ thuật', S: 'Xã hội', E: 'Kinh doanh', C: 'Quy ước' };
+            return titles[key] || '';
+        };
+
+        const renderMajors = () => {
+            const { majorsFilter } = window.globalState;
+            
+            const filteredMajors = MOCK_DATA.majors.filter(major => {
+                const groupMatch = majorsFilter.group === 'all' || major.group === majorsFilter.group;
+                
+                // Assuming testResult is available for filtering by fit
+                let majorFit = 0;
+                if (window.globalState.testResult) {
+                    const foundMajor = window.globalState.testResult.topMajors.find(m => m.id === major.id);
+                    majorFit = foundMajor ? foundMajor.suitabilityScore : 0;
+                }
+                const fitMatch = majorFit >= majorsFilter.fit;
+
+                return groupMatch && fitMatch;
+            });
+
+            const majorsHtml = filteredMajors.map(major => {
+                let suitabilityInfo = { score: 0, level: 'Chưa test', badge: 'bg-gray-200 text-gray-600' };
+                if (window.globalState.testResult) {
+                    const foundMajor = window.globalState.testResult.topMajors.find(m => m.id === major.id);
+                    if (foundMajor) {
+                        suitabilityInfo = { score: foundMajor.suitabilityScore, ...getSuitabilityLevel(foundMajor.suitabilityScore) };
+                    }
+                }
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition fade-slide-up">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl font-bold text-primary-blue">${major.name}</h3>
+                            <span class="text-xs font-medium px-3 py-1 rounded-full ${suitabilityInfo.badge}">${suitabilityInfo.level} (${suitabilityInfo.score}%)</span>
+                        </div>
+                        <p class="text-gray-600 mb-3">${major.description.substring(0, 80)}...</p>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+                            <span><svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Môn: ${major.subjects.slice(0, 2).join(', ')}...</span>
+                            <span><svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg> Lương: ${major.salary}</span>
+                        </div>
+                        <button class="text-primary-blue font-semibold text-sm hover:text-blue-700 transition">Xem chi tiết &rarr;</button>
+                    </div>
+                `;
+            }).join('');
+
+            const html = `
+                <section>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 text-center fade-slide-up">Danh sách Ngành học</h2>
+                    <p class="text-xl text-gray-600 mb-10 text-center fade-slide-up">Khám phá các ngành học và đánh giá mức độ phù hợp cá nhân.</p>
+
+                    <!-- Filter Bar -->
+                    <div class="bg-secondary-gray p-4 rounded-xl mb-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 fade-slide-up" style="transition-delay: 0.1s;">
+                        <select id="major-group-filter" onchange="updateMajorsFilter()" class="p-2 border rounded-lg focus:ring-primary-blue focus:border-primary-blue w-full sm:w-1/3">
+                            <option value="all">Tất cả nhóm ngành</option>
+                            <option value="Tự nhiên">Ngành Tự nhiên/Kỹ thuật</option>
+                            <option value="Xã hội">Ngành Xã hội/Kinh tế</option>
+                        </select>
+                        <div class="flex-grow">
+                            <label for="major-fit-filter" class="block text-sm font-medium text-gray-700">Lọc theo mức phù hợp (từ ${majorsFilter.fit}%)</label>
+                            <input type="range" id="major-fit-filter" min="0" max="100" value="${majorsFilter.fit}" step="10" oninput="document.getElementById('fit-value').textContent = this.value + '%'; updateMajorsFilter()" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                            <span id="fit-value" class="text-sm text-primary-blue font-semibold">${majorsFilter.fit}%</span>
+                        </div>
+                    </div>
+
+                    <!-- Majors Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${majorsHtml}
+                    </div>
+                </section>
+            `;
+            renderContent(html);
+        };
+        window.renderMajors = renderMajors;
+
+        const updateMajorsFilter = () => {
+            window.globalState.majorsFilter.group = document.getElementById('major-group-filter').value;
+            window.globalState.majorsFilter.fit = parseInt(document.getElementById('major-fit-filter').value);
+            renderMajors();
+        };
+
+        const renderUniversities = () => {
+            const regions = ['North', 'Central', 'South'];
+            const regionNames = { North: 'Miền Bắc', Central: 'Miền Trung', South: 'Miền Nam' };
+
+            const unisHtml = regions.map(region => {
+                const regionUnis = MOCK_DATA.universities.filter(uni => uni.region === region).sort((a, b) => b.suitability - a.suitability);
+                
+                const uniCards = regionUnis.map(uni => {
+                    const fit = getSuitabilityLevel(uni.suitability);
+                    return `
+                        <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition fade-slide-up">
+                            <div class="flex items-center mb-3">
+                                <img src="${uni.logo}" alt="${uni.name} logo" class="w-12 h-12 rounded-full mr-4 border-2 border-primary-blue object-cover">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">${uni.name}</h4>
+                                    <span class="text-sm font-medium px-2 py-0.5 rounded-full ${fit.badge}">${fit.level} (${uni.suitability}%)</span>
+                                </div>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li><span class="font-medium">Điểm chuẩn (2024):</span> ${uni.cutoff[2024]}</li>
+                                <li><span class="font-medium">Học phí:</span> ${uni.tuition}</li>
+                                <li><span class="font-medium">Ngành mạnh:</span> ${uni.strongMajors.slice(0, 2).join(', ')}...</li>
+                            </ul>
+                            <a href="${uni.map}" target="_blank" class="mt-3 inline-flex items-center text-primary-blue text-sm hover:text-blue-700 transition">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Xem trên bản đồ
+                            </a>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="mb-10 fade-slide-up" style="transition-delay: 0.2s;">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">${regionNames[region]}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${uniCards}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const html = `
+                <section>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 text-center fade-slide-up">Hệ thống Trường Đại học</h2>
+                    <p class="text-xl text-gray-600 mb-10 text-center fade-slide-up">Thông tin chi tiết về điểm chuẩn, học phí và mức độ phù hợp cá nhân.</p>
+                    ${unisHtml}
+                </section>
+            `;
+            renderContent(html);
+        };
+        window.renderUniversities = renderUniversities;
+
+        const renderBlog = () => {
+            const blogPosts = [
+                { id: 1, title: 'Cách chọn ngành khi chưa biết mình thích gì', summary: 'Phương pháp khoa học giúp bạn xác định sở thích và tiềm năng nghề nghiệp.', date: '01/08/2025', tag: 'Hướng nghiệp' },
+                { id: 2, title: 'Ngành hot 2025-2030: Cơ hội và thách thức', summary: 'Phân tích các ngành nghề có tiềm năng phát triển mạnh mẽ trong 5 năm tới.', date: '25/07/2025', tag: 'Thị trường' },
+                { id: 3, title: 'Top trường đào tạo IT, Kinh tế, Y dược hàng đầu Việt Nam', summary: 'Danh sách các trường đại học uy tín theo nhóm ngành.', date: '15/07/2025', tag: 'Trường học' },
+                { id: 4, title: 'Kinh nghiệm chọn trường phù hợp mục tiêu và tài chính', summary: 'Cân nhắc giữa chất lượng, điểm chuẩn và học phí khi đưa ra quyết định.', date: '05/07/2025', tag: 'Kinh nghiệm' },
+            ];
+
+            const postsHtml = blogPosts.map((post, index) => `
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition fade-slide-up" style="transition-delay: ${index * 0.1}s;">
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-primary-blue">${post.tag}</span>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-2 mb-3">${post.title}</h3>
+                    <p class="text-gray-600 mb-4">${post.summary}</p>
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span>Ngày đăng: ${post.date}</span>
+                        <a href="#" class="text-primary-blue font-semibold hover:text-blue-700">Đọc thêm &rarr;</a>
+                    </div>
+                </div>
+            `).join('');
+
+            const html = `
+                <section>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 text-center fade-slide-up">Blog Hướng nghiệp</h2>
+                    <p class="text-xl text-gray-600 mb-10 text-center fade-slide-up">Cập nhật kiến thức, kinh nghiệm và thông tin thị trường mới nhất.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${postsHtml}
+                    </div>
+                </section>
+            `;
+            renderContent(html);
+        };
+        window.renderBlog = renderBlog;
+
+        const renderContact = () => {
+            const html = `
+                <section class="max-w-3xl mx-auto bg-secondary-gray p-8 rounded-2xl shadow-xl fade-slide-up">
+                    <h2 class="text-4xl font-extrabold text-primary-blue mb-4 text-center">Liên hệ với chúng tôi</h2>
+                    <p class="text-xl text-gray-600 mb-8 text-center">Chúng tôi sẵn lòng giải đáp mọi thắc mắc của bạn.</p>
+
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Họ và tên</label>
+                            <input type="text" id="name" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-blue focus:ring-primary-blue p-3">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-blue focus:ring-primary-blue p-3">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Nội dung</label>
+                            <textarea id="message" rows="4" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-blue focus:ring-primary-blue p-3"></textarea>
+                        </div>
+                        <button type="submit" onclick="event.preventDefault(); showMessage('Thành công', 'Cảm ơn bạn! Yêu cầu của bạn đã được gửi đi và chúng tôi sẽ phản hồi sớm nhất.')" class="w-full bg-primary-blue text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 transition">
+                            Gửi Liên hệ
+                        </button>
+                    </form>
+                </section>
+            `;
+            renderContent(html);
+        };
+
+        const renderDashboard = async () => {
+            showLoading();
+            const result = await loadTestResult();
+            window.globalState.testResult = result; // Update global state
+            hideLoading();
+
+            const userId = window.getUserId();
+
+            let dashboardContent;
+
+            if (!result) {
+                dashboardContent = `
+                    <div class="text-center p-10 bg-white rounded-xl shadow-lg border-2 border-dashed border-gray-300">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h10a2 2 0 012 2v1m-3 7h-6a2 2 0 01-2-2v-4a2 2 0 012-2h6a2 2 0 012 2v4a2 2 0 01-2 2z"></path></svg>
+                        <h3 class="text-2xl font-semibold mb-2">Bạn chưa có kết quả test</h3>
+                        <p class="text-gray-600 mb-6">Hãy làm bài test toàn diện để nhận phân tích cá nhân và bắt đầu xây dựng Dashboard của bạn!</p>
+                        <button onclick="navigate('test')" class="bg-primary-blue text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition">
+                            Làm Bài Test Ngay
+                        </button>
+                    </div>
+                `;
+            } else {
+                const topMajor = result.topMajors[0];
+                const overallFit = getSuitabilityLevel(topMajor.suitabilityScore);
+                const lastUpdated = new Date(result.timestamp).toLocaleString('vi-VN');
+
+                const comparisonHtml = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">So sánh Ngành học</h3>
+                    <p class="text-gray-600 mb-4">Chọn 2-3 ngành từ danh sách dưới đây để so sánh chi tiết:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${MOCK_DATA.majors.map(major => {
+                            const foundMajor = result.topMajors.find(m => m.id === major.id);
+                            const score = foundMajor ? foundMajor.suitabilityScore : calculateSuitability(major, result);
+
+                            return `
+                                <div class="flex items-center p-3 bg-white rounded-lg border shadow-sm">
+                                    <input type="checkbox" id="compare-${major.id}" value="${major.id}" 
+                                        class="w-4 h-4 text-primary-blue focus:ring-primary-blue rounded"
+                                        onchange="updateComparison()">
+                                    <label for="compare-${major.id}" class="ml-3 text-gray-700 font-medium">${major.name}</label>
+                                    <span class="ml-auto font-bold text-sm text-primary-blue">${score}%</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div id="comparison-results" class="mt-6 p-4 bg-secondary-gray rounded-xl hidden">
+                        <!-- Comparison Chart will be rendered here -->
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Biểu đồ so sánh (Tối đa 3 ngành)</h4>
+                        
+                    </div>
+                `;
+
+                dashboardContent = `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Summary and User Info -->
+                        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-blue fade-slide-up">
+                            <h3 class="text-2xl font-bold text-primary-blue mb-4">Tóm tắt Kết quả</h3>
+                            <p class="text-gray-500 text-sm mb-4">Lần cập nhật cuối: ${lastUpdated}</p>
+                            
+                            <div class="p-4 bg-secondary-gray rounded-lg mb-4">
+                                <p class="text-lg font-semibold">Ngành phù hợp nhất:</p>
+                                <p class="text-2xl font-extrabold text-green-600">${topMajor.name}</p>
+                            </div>
+
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-medium text-gray-700">Mức độ phù hợp:</span>
+                                <span class="text-2xl font-bold ${overallFit.color}">${topMajor.suitabilityScore}%</span>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <p class="font-medium text-gray-700">ID Người dùng (Để chia sẻ):</p>
+                                <code class="bg-gray-100 text-xs p-2 rounded block break-all mt-1">${userId}</code>
+                            </div>
+                            
+                            <button onclick="navigate('results')" class="mt-4 w-full text-center text-sm text-white bg-primary-blue py-2 rounded-lg hover:bg-blue-700 transition">
+                                Xem chi tiết Phân tích
+                            </button>
+                        </div>
+                        
+                        <!-- Comparison and Statistics -->
+                        <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border fade-slide-up" style="transition-delay: 0.1s;">
+                            ${comparisonHtml}
+                            
+                            <div class="mt-10 border-t pt-6">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">Thống kê Năng lực</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    ${Object.entries(result.skillScores).map(([skill, score]) => `
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">${skill}</p>
+                                            <div class="w-full bg-secondary-gray rounded-full h-2.5">
+                                                <div class="bg-yellow-500 h-2.5 rounded-full" style="width: ${score / 5 * 100}%;"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-500">${score}/5</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const html = `
+                <section>
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4 text-center fade-slide-up">Dashboard Cá nhân</h2>
+                    <p class="text-xl text-gray-600 mb-10 text-center fade-slide-up">Nơi lưu trữ kết quả, so sánh và theo dõi hành trình hướng nghiệp của bạn.</p>
+                    ${dashboardContent}
+                </section>
+            `;
+            renderContent(html);
+        };
+        window.renderDashboard = renderDashboard;
+        
+        const updateComparison = () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="compare-"]:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+            const comparisonDiv = document.getElementById('comparison-results');
+            const result = window.globalState.testResult;
+
+            if (selectedIds.length > 0) {
+                comparisonDiv.classList.remove('hidden');
+                
+                if (selectedIds.length > 3) {
+                    showMessage('Cảnh báo', 'Chỉ có thể so sánh tối đa 3 ngành. Vui lòng bỏ chọn bớt.');
+                    // Uncheck the latest one
+                    checkboxes[checkboxes.length - 1].checked = false;
+                    return;
+                }
+
+                const comparisonData = MOCK_DATA.majors
+                    .filter(m => selectedIds.includes(m.id))
+                    .map(m => {
+                        const foundMajor = result ? result.topMajors.find(tm => tm.id === m.id) : null;
+                        const score = foundMajor ? foundMajor.suitabilityScore : 0;
+                        return { name: m.name, score: score, salary: m.salary, stability: m.stability };
+                    });
+
+                // Render simple comparison text (instead of a full chart library)
+                const dataRows = comparisonData.map(data => {
+                    return `
+                        <tr class="border-b">
+                            <td class="px-4 py-2 font-medium">${data.name}</td>
+                            <td class="px-4 py-2 font-bold text-primary-blue">${data.score}%</td>
+                            <td class="px-4 py-2">${data.salary}</td>
+                            <td class="px-4 py-2">${data.stability}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                comparisonDiv.innerHTML = `
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Biểu đồ so sánh (Tối đa 3 ngành)</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg shadow-inner">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Ngành</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Phù hợp (%)</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Lương</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Ổn định</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${dataRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+            } else {
+                comparisonDiv.classList.add('hidden');
+            }
+        };
+
+        // --- INITIALIZATION ---
+        // Determine initial page from URL hash or default to 'home'
+        const initialPage = window.location.hash.substring(1) || 'home';
+        window.addEventListener('load', () => {
+            // Wait a bit for potential Firebase init to start
+            setTimeout(() => navigate(initialPage), 500); 
+        });
+        window.onhashchange = () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && hash !== window.globalState.currentPage) {
+                navigate(hash);
+            }
+        };
+        
+    </script>
+</body>
+</html>
